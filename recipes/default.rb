@@ -23,3 +23,17 @@ chef_gem "right_aws" do
 end
 
 require 'right_aws'
+
+# Manage AWS access keys as requested via node attributes (done immediately)
+aws_access_keys_entries = node['aws']['access_keys']
+unless aws_access_keys_entries.nil?
+  aws_access_keys_entries.each do |name, attributes|
+    act = attributes.delete('action') || :set
+    aws_access_keys name do
+      attributes.each do |k, v|
+        self.send(k.to_sym, v)
+      end
+      action :nothing
+    end.run_action(act)
+  end
+end
