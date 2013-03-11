@@ -32,7 +32,12 @@ require 'right_aws'
 aws_access_keys_entries = node['aws']['access_keys']
 unless aws_access_keys_entries.nil?
   aws_access_keys_entries.each do |name, attributes|
-    act = attributes.delete('action') || :default
+    act = if attributes.include? 'action'
+      attributes['action']
+    else
+      :set
+    end
+
     aws_access_keys name do
       attributes.each do |k, v|
         self.send(k.to_sym, v)
