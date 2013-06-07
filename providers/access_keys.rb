@@ -38,10 +38,9 @@ action :set do
       unless attr_map.has_key?(attr_path_element)
         attr_map[attr_path_element] = {}
       end
-      attr_map = attr_map[attr_path_element]
+      attr_map[attr_path_element][new_resource.attribute_access_key] = access_key_entry['access_key']
+      attr_map[attr_path_element][new_resource.attribute_secret_access_key] = access_key_entry['secret_access_key']
     end
-    attr_map[new_resource.attribute_access_key] = access_key_entry['access_key']
-    attr_map[new_resource.attribute_secret_access_key] = access_key_entry['secret_access_key']
     Chef::Log.info("AWS access keys '#{new_resource.key_id}' set.")
   end
   nil
